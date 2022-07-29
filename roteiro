@@ -1,0 +1,68 @@
+limite de 20
+semaforo 1 e 2 (0,1,2 - verde,amarelo,vermelho)
+sensor 1 e 2 (0,1 - passou um veiculo, nada aconteceu)
+contagem (0 - limite - Quantidade de veiculos na pista)
+faixa (0,1 - Faixa atual)
+countTempo (Contador de mensagens, a cada 1 temos 5s)
+inicial (semaforo1 = 0, semaforo2 = 2, sensor1 e 2 = 0, contagem = 0, faixa = 0, countTempo = 0)
+Se semaforo2 == 2 e semaforo1 != 2 e faixa == 0
+	habilita passagem na via do sensor1
+	espera 5s
+	Se sensor1 == 1
+		1 carro entrou na via
+		aumenta a contagem
+	envia msg sensor1
+	envia msg contagem
+	aumenta countTempo
+	espera 5s
+	Se sensor2 == 1
+		1 carro deixou na via
+		diminui a contagem
+	envia msg sensor2
+	envia msg contagem
+	aumenta countTempo
+	Se contagem de carros chegar a limite -2 ou tempo igual a 3m20s(40 msg)
+		semaforo1 = 1
+		envia msg semaforo1
+	Se contagem de carros chegar ao limite ou tempo igual a 3m40s(44 msg)
+		semaforo1 = 2
+		envia msg semaforo1
+Se semaforo1 == 2 e semaforo2 != 2 e faixa == 1
+	habilita passagem na via do sensor2
+	espera 5s
+	Se sensor2 == 1
+		1 carro entrou na via
+		aumenta a contagem
+	envia msg sensor2
+	envia msg contagem
+	aumenta countTempo
+	espera 5s
+	Se sensor1 == 1
+		1 carro deixou na via
+		diminui a contagem
+	envia msg sensor1
+	envia msg contagem
+	aumenta countTempo
+	Se contagem de carros chegar a limite -2 ou tempo igual a 3m20s(40 msg)
+		semaforo2 = 1
+		envia msg semaforo2
+	Se contagem de carros chegar ao limite ou tempo igual a 3m40s(44 msg)
+		semaforo2 = 2
+		envia msg semaforo2
+Se semaforo1 == 1 e semaforo2 == 2
+	espera os carros sairem da via
+	Se sensor1 == 1
+		1 carro deixou na via
+		diminui a contagem
+		envia msg contagem
+	Se sensor2 == 1
+		1 carro deixou na via
+		diminui a contagem
+		envia msg contagem
+	Se contagem == 0
+		semaforo1 ou semaforo2 = 0
+		envia msg semaforo1 ou semaforo2
+		envia msg faixa (0 -> 1, 1 -> 0)
+		countTempo = 0
+
+
